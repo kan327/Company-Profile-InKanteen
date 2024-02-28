@@ -1,48 +1,19 @@
 <script setup >
 import Default from '~/layouts/Default.vue'
-import { useWindowScroll, useScroll } from '@vueuse/core'
-import { onBeforeMount, onMounted, onUpdated, ref } from "vue"
 definePageMeta({
   layout: 'Default',
 });
 
-const items = [
-  {
-    id: 1,
-    img: "https://placehold.co/528x283",
-    title: "Cara Baru Jajan Dikantin",
-    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-  },
-  {
-    id: 2,
-    img: "https://placehold.co/528x283",
-    title: "Cara Baru Jajan Dikantin",
-    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-  },
-  {
-    id: 3,
-    img: "https://placehold.co/528x283",
-    title: "Cara Baru Jajan Dikantin",
-    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-  },
-  {
-    id: 4,
-    img: "https://placehold.co/528x283",
-    title: "Cara Baru Jajan Dikantin",
-    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-  },
-]
+import { useQuery } from "@tanstack/vue-query"
 
-let { y: YContainer } = useWindowScroll()
+const fetcher = async () =>
+  await fetch('http://127.0.0.1:8000/api/getAllStories').then((response) =>
+    response.json(),
+  )
 
-let scrollContainer = ref(null)
-let { x, y } = useScroll(scrollContainer)
-
-watchEffect(() => {
-  console.log(scrollContainer.value)
-  // scrollContainer.value.scrollLeft += 100
-})
-
+const { data, suspense } = useQuery({ queryKey: ['test'], queryFn: fetcher })
+await suspense()
+console.log(data.value.stories)
 </script>
 
 <template>
@@ -69,20 +40,22 @@ watchEffect(() => {
         </div>
       </div>
     </div>
-    <!-- <div class="p-5 relative -top-12 mx-auto border-3A4 border-2 border-solid w-fit rounded-lg rotate-45">
+    <div class="p-5 relative -top-12 mx-auto border-3A4 border-2 border-solid w-fit rounded-lg rotate-45">
       <div class="-rotate-45">
         <Icon name="ep:arrow-down-bold" size="20" color="#3A4064" />
       </div>
-    </div> -->
-    <!-- <div class="overflow-x-hidden h-screen pt-32 -mt-10">
-      <div class="flex gap-3 rotate-[10deg]" ref="scrollContainer">
-        <div v-for="item in items" :key="item.id">
-          <TrailImg :image="item.img" :title="item.title" :desc="item.desc" />
+    </div>
+    <div v-if="data" class="bigImgBox mx-auto scroll rotate-[10deg] mb-32" style="--time: 10s">
+      <div class="roll w-[500px]">
+        <div v-for="item in data.stories" :key="item.id">
+          <div class="w-[500px]">
+            <img :src="item.featured_image" class="w-[528px] h-[283px]" width="528" height="283" alt="" />
+          </div>
         </div>
       </div>
-    </div> -->
+    </div>
 
-    <main class="mt-20 sm:mt-0">
+    <main class="mt-52 sm:mt-0">
       <div class="mx-5 sm:mx-16 lg:mx-20 mb-20 text-center md:text-start">
         <div class="uppercase text-32C text-4xl sm:text-5xl xl:text-7.5xl leading-none font-clash_display font-bold">
           TERPERCAYA

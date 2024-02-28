@@ -3,7 +3,6 @@ const rollimgprops = defineProps({
   time: { type: String, required: true },
   direct: { type: String, required: true}
 });
-console.log(rollimgprops)
 </script>
 <template>
       <div class="imgBox mx-auto" :class="[direct == 'R' ? 'scroll' : 'Lscroll' ]"  :style="{ '--time': time }">
